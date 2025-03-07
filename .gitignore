@@ -1,0 +1,55 @@
+# Byte-compiled / optimized / DLL files
+*.py[cod]
+*.pyo
+*.pyd
+__pycache__/
+
+# Distribution / packaging
+.Python
+build/
+dist/
+*.egg-info/
+*.eggs/
+
+# Virtualenv
+venv/
+ENV/
+env/
+.venv/
+venv.bak/
+env.bak/
+
+# VS Code
+.vscode/
+
+# IDEs and editors
+.idea/
+*.sublime-workspace
+*.sublime-project
+
+# Jupyter Notebooks
+.ipynb_checkpoints/
+
+# PyCharm
+.idea/
+
+# mypy
+.mypy_cache/
+.dmypy.json
+dmypy.json
+
+# pytest
+.cache/
+
+# Pyre type checker
+.pyre/
+
+# Cython debug symbols
+cython_debug/
+
+# Pycharm
+# If you're using PyCharm, you can add the following to ignore PyCharm-specific files
+.idea/
+
+# JetBrains IDEs (e.g., WebStorm, IntelliJ)
+.idea/
