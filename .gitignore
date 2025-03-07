@@ -1,4 +1,4 @@
-#.xml_convert/
+.xml_convert/
 
 # Byte-compiled / optimized / DLL files
 *.py[cod]
