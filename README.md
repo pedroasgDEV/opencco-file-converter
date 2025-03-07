@@ -77,11 +77,3 @@ These dependencies should be automatically installed when you run the `pip insta
 ## License
 
 This project is licensed under the MIT License - see the [LICENSE](LICENSE) file for details.
-```
-
-### Como usar:
-1. Crie um arquivo chamado `README.md` no diretório principal do seu projeto.
-2. Cole o conteúdo acima no arquivo.
-3. Ajuste qualquer detalhe necessário, como o nome do repositório e o conteúdo de exemplos, conforme o progresso do seu projeto.
-
-Isso criará uma documentação clara e funcional para o seu projeto.
