@@ -1,4 +1,3 @@
-# Definindo as variáveis
 VENV_NAME = .xml_convert
 REQUIREMENTS = ./requirements.txt
 SRC = ./__main__.py
@@ -7,35 +6,28 @@ BUILD_DIR = ./build
 SPEC_FILE = opencco-file-converter.spec
 EXEC_NAME = opencco-file-converter
 
-# Comando para criar o ambiente virtual
 create-venv:
-	@echo "Criando ambiente virtual em '$(VENV_NAME)'..."
+	@echo "Creating virtual environment in '$(VENV_NAME)'..."
 	python3 -m venv $(VENV_NAME)
-	@echo "Ambiente virtual criado com sucesso."
+	@echo "Virtual environment created successfully."
 
-# Comando para instalar as dependências
 install-deps: create-venv
-	@echo "Instalando dependências do projeto..."
+	@echo "Installing project dependencies..."
 	$(VENV_NAME)/bin/pip install -r $(REQUIREMENTS)
-	@echo "Dependências instaladas com sucesso."
+	@echo "Dependencies installed successfully."
 
-# Comando para limpar arquivos temporários do PyInstaller
 clean:
-	@echo "Limpando arquivos temporários..."
-	rm -rf $(DIST_DIR) $(BUILD_DIR) $(SPEC_FILE)
-	@echo "Arquivos temporários limpos."
-
-# Comando para empacotar o projeto com PyInstaller
-build: install-deps
-	@echo "Criando o executável com PyInstaller..."
-	$(VENV_NAME)/bin/pyinstaller --onefile --name $(EXEC_NAME) --add-data "models:models" --add-data "utils:utils" $(SRC)
-	@echo "Executável criado com sucesso."
-
-# Comando principal: executar todas as etapas de uma vez (limpar, instalar, build)
-all: clean build
-	@echo "Tudo pronto! O executável está em '$(DIST_DIR)/$(EXEC_NAME)'"
+	@echo "Cleaning up temporary files..."
 	mv $(DIST_DIR)/$(EXEC_NAME) .
-	rm -rf $(DIST_DIR) $(BUILD_DIR) $(SPEC_FILE)
+	rm -rf $(DIST_DIR) $(BUILD_DIR) $(SPEC_FILE) $(VENV_NAME)
+	@echo "Cleaned temporary files."
 
-# Redefine o comando padrão para 'make all'
+build: install-deps
+	@echo "Creating the executable with PyInstaller..."
+	$(VENV_NAME)/bin/pyinstaller --onefile --name $(EXEC_NAME) --add-data "models:models" --add-data "utils:utils" $(SRC)
+	@echo "Executable '$(EXEC_NAME)' created successfully."
+
+all: build clean
+	@echo "'./$(EXEC_NAME) --help' to help"
+
 .DEFAULT_GOAL := all
