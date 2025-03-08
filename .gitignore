@@ -1,4 +1,7 @@
 .xml_convert/
+dist
+build
+*.spec
 
 # Byte-compiled / optimized / DLL files
 *.py[cod]
