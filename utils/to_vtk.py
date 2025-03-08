@@ -13,6 +13,8 @@ class TO_VTK:
             file.write("# vtk DataFile Version 3.0\nvtk output\nASCII\nDATASET POLYDATA\n")
             self.__points__(file)
             self.__lines__(file)
+            self.__flow__(file)
+            self.__resistance__(file)
             self.__radius__(file)
 
     def __points__(self, file):
@@ -20,7 +22,7 @@ class TO_VTK:
         
         for point in self.__CCO__.points:
             if len(point['floats']) == 2:
-                file.write(f"{point['floats'][0]:.7f} {point['floats'][1]:.7f} {1:.7f}\n")
+                file.write(f"{point['floats'][0]:.7f} {point['floats'][1]:.7f} {0:.7f}\n")
             else:
                 file.write(f"{point['floats'][0]:.7f} {point['floats'][1]:.7f} {point['floats'][2]:.7f}\n")
 
@@ -30,9 +32,21 @@ class TO_VTK:
         for line in self.__CCO__.lines:
             file.write(f"2 {line['from']} {line['to']}\n")
 
-    def __radius__(self, file):
+    def __flow__(self, file):
         file.write(f"\nCELL_DATA {len(self.__CCO__.lines)}\n")
-        file.write("scalars raio float\nLOOKUP_TABLE default\n")
+        file.write("scalars flow float\nLOOKUP_TABLE default\n")
+
+        for line in self.__CCO__.lines:
+            file.write(f"{line['flow']}\n")
+
+    def __resistance__(self, file):
+        file.write("scalars resistance float\nLOOKUP_TABLE default\n")
+
+        for line in self.__CCO__.lines:
+            file.write(f"{line['resistance']:.7f}\n")
+
+    def __radius__(self, file):
+        file.write("scalars radius float\nLOOKUP_TABLE default\n")
 
         for line in self.__CCO__.lines:
             file.write(f"{line['radius']:.7f}\n")

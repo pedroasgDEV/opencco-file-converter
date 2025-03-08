@@ -1,5 +1,5 @@
 import xmltodict
-
+import json
 class CCO:
     def __init__(self, file_xml):
         # Tree structure
@@ -8,11 +8,19 @@ class CCO:
 
         # File location
         self.adr_xml = file_xml
-        
+
         self.__read_file__()
+
+        # Get pPerf n pTerm (Pascal)
+        for attr in self.__tree_dict__["gxl"]["graph"]["info_graph"]["attr"]:
+                if attr["@name"].strip() == "pPerf":
+                    self.pPerf = int(attr["float"])
+                if attr["@name"].strip() == "pTerm":
+                    self.pTerm = int(attr["float"])
+
         self.__get_points__()
         self.__get_lines__()
-        self.__get_levels__()
+        self.__calc_levels__()
 
     # Convert XML to a dict
     def __read_file__(self):
@@ -47,18 +55,23 @@ class CCO:
                 "from": int(edge["@from"].replace("n", "")),
                 "to": int(edge["@to"].replace("n", "")),
                 "radius": None,
+                "resistance": None,
+                "flow": None,
                 "level": -1
             }
             
             for attr in edge.get("attr", []):
+                if attr["@name"].strip() == "flow":
+                    edge_data["flow"] = float(attr["float"])
+                if attr["@name"].strip() == "resistance":
+                    edge_data["resistance"] = float(attr["float"])
                 if attr["@name"].strip() == "radius":
                     edge_data["radius"] = float(attr["float"])
-                    break
             
             self.lines.append(edge_data)
 
     # Get levels of the tree
-    def __get_levels__(self):
+    def __cal_levels__(self):
         temp_lines = self.lines.copy()
         levels = [[]]
         
@@ -67,7 +80,7 @@ class CCO:
         levels[0] = [self.lines[0]["to"]]
         
         while temp_lines:
-            for i, line in enumerate(temp_lines):
+            for line in temp_lines:
                 from_node = line["from"]
                 to_node = line["to"]
                 
