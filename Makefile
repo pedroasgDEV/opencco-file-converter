@@ -1,8 +1,8 @@
 VENV_NAME = .xml_convert
-REQUIREMENTS = ./requirements.txt
-SRC = ./__main__.py
-DIST_DIR = ./dist
-BUILD_DIR = ./build
+REQUIREMENTS = requirements.txt
+SRC = __main__.py
+DIST_DIR = dist
+BUILD_DIR = build
 SPEC_FILE = opencco-file-converter.spec
 EXEC_NAME = opencco-file-converter
 
