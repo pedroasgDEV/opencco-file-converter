@@ -1,4 +1,4 @@
-from app.models.CCO import CCO
+from models.CCO import CCO
 
 class TO_TXT:
     def __init__(self, cco : CCO, file_txt = "output.txt"):

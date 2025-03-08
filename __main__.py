@@ -1,9 +1,9 @@
 import argparse
 import os
 
-from app.models.CCO import CCO
-from app.utils.to_txt import TO_TXT
-from app.utils.to_vtk import TO_VTK
+from models.CCO import CCO
+from utils.to_txt import TO_TXT
+from utils.to_vtk import TO_VTK
 
 def main():
     parser = argparse.ArgumentParser(

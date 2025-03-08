@@ -2,6 +2,10 @@
 dist
 build
 *.spec
+*.txt
+*.vtk
+*.xml
+opencco-file-converter
 
 # Byte-compiled / optimized / DLL files
 *.py[cod]
