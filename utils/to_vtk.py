@@ -5,7 +5,10 @@ class TO_VTK:
         self.__CCO__ = cco
         self.adr_vtk = file_vtk
 
-        self.__write__()
+        try:
+            self.__write__()
+        except:
+            raise IOError("ERROR: Something went wrong while writing the vtk file")
 
     # Write cco tree in a txt
     def __write__(self):

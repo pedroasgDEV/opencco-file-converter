@@ -5,7 +5,10 @@ class TO_TXT:
         self.__CCO__ = cco
         self.adr_txt = file_txt
 
-        self.__write__()
+        try:
+            self.__write__()
+        except:
+            raise IOError("ERROR: Something went wrong while writing the txt file")
 
     # Write cco tree in a txt
     def __write__(self):

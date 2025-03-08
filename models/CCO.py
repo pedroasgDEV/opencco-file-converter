@@ -6,21 +6,24 @@ class CCO:
         self.points = []
         self.lines = []
 
-        # File location
-        self.adr_xml = file_xml
+        try:
+            # File location
+            self.adr_xml = file_xml
 
-        self.__read_file__()
+            self.__read_file__()
 
-        # Get pPerf n pTerm (Pascal)
-        for attr in self.__tree_dict__["gxl"]["graph"]["info_graph"]["attr"]:
-                if attr["@name"].strip() == "pPerf":
-                    self.pPerf = int(attr["float"])
-                if attr["@name"].strip() == "pTerm":
-                    self.pTerm = int(attr["float"])
+            # Get pPerf n pTerm (Pascal)
+            for attr in self.__tree_dict__["gxl"]["graph"]["info_graph"]["attr"]:
+                    if attr["@name"].strip() == "pPerf":
+                        self.pPerf = int(attr["float"])
+                    if attr["@name"].strip() == "pTerm":
+                        self.pTerm = int(attr["float"])
 
-        self.__get_points__()
-        self.__get_lines__()
-        self.__calc_levels__()
+            self.__get_points__()
+            self.__get_lines__()
+            self.__calc_levels__()
+        except:
+            raise SyntaxError("ERROR: Something is wrong with the xml structure")
 
     # Convert XML to a dict
     def __read_file__(self):
@@ -71,7 +74,7 @@ class CCO:
             self.lines.append(edge_data)
 
     # Get levels of the tree
-    def __cal_levels__(self):
+    def __calc_levels__(self):
         temp_lines = self.lines.copy()
         levels = [[]]
         
