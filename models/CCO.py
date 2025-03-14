@@ -1,10 +1,13 @@
 import xmltodict
+import math
+import numpy as np
 
 class CCO:
     def __init__(self, file_xml):
         # Initialize tree structure
         self.points = []  # List to hold points data
         self.lines = []   # List to hold lines data
+        self.volume = 0   # Total tree volume
 
         self.adr_xml = file_xml # Store XML file location
 
@@ -58,7 +61,9 @@ class CCO:
             edge_data = {
                 "from": int(edge["@from"].replace("n", "")),  # Extract 'from' node
                 "to": int(edge["@to"].replace("n", "")),      # Extract 'to' node
+                "length": None,
                 "radius": None,
+                "volume": None,
                 "resistance": None,
                 "flow": None,
                 "level": -1  # Initialize level for edge
@@ -73,9 +78,20 @@ class CCO:
                 if attr["@name"].strip() == "radius":
                     edge_data["radius"] = float(attr["float"])
             
+            # Get the coordinates of each point
+            pFrom = self.points[edge_data["from"]]["floats"]
+            pTo = self.points[edge_data["to"]]["floats"]
+
+            # Calc Length
+            edge_data["length"] = np.linalg.norm(np.array(pTo) - np.array(pFrom))
+
+            # Calc Volume
+            edge_data["volume"] = math.pi * (edge_data["radius"] ** 2) * edge_data["length"]
+            self.volume += edge_data["volume"]
+
             self.lines.append(edge_data)
 
-    # Calculate levels for nodes in the tree based on their connections
+    # Calculate levels for nodes in the tree based ogitn their connections
     def __calc_levels__(self):
         temp_lines = self.lines.copy()  # Make a copy of the lines
         levels = [[]]  # List to store levels of nodes

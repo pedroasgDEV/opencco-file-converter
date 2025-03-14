@@ -58,3 +58,10 @@ class TO_VTK:
 
         for line in self.__CCO__.lines:
             file.write(f"{line['radius']:.7f}\n")
+
+    # Write volume data as cell attributes
+    def __radius__(self, file):
+        file.write("scalars volume float\nLOOKUP_TABLE default\n")
+
+        for line in self.__CCO__.lines:
+            file.write(f"{line['volume']:.7f}\n")
