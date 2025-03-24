@@ -85,7 +85,7 @@ class CCO:
             pTo = self.points[edge_data["to"]]["floats"]
 
             # Calc Length
-            edge_data["length"] = np.linalg.norm(np.array(pTo) - np.array(pFrom))
+            edge_data["length"] = np.linalg.norm(np.array(pTo) - np.array(pFrom)) * 10
 
             # Calc Volume
             edge_data["volume"] = math.pi * (edge_data["radius"] ** 2) * edge_data["length"]
