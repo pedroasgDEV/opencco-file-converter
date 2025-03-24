@@ -16,9 +16,12 @@ class TO_VTK:
             file.write("# vtk DataFile Version 3.0\nvtk output\nASCII\nDATASET POLYDATA\n")
             self.__points__(file)
             self.__lines__(file)
+            self.__pressure__(file)
+            self.__pressure_diff__(file)
             self.__flow__(file)
             self.__resistance__(file)
             self.__radius__(file)
+            self.__volume__(file)
 
     # Write point data to the VTK file
     def __points__(self, file):
@@ -37,9 +40,25 @@ class TO_VTK:
         for line in self.__CCO__.lines:
             file.write(f"2 {line['from']} {line['to']}\n")  # '2' indicates a line with two points
 
+    # Write pressure data as point attributes
+    def __pressure__(self, file):
+        file.write(f"\nPOINT_DATA {len(self.__CCO__.points)}\n")
+        file.write("scalars pressure float\nLOOKUP_TABLE default\n")
+
+        for line in self.__CCO__.lines:
+            file.write(f"{line['pPerf']:.7f}\n")
+            file.write(f"{line['pTerm']:.7f}\n")
+
+    # Write pressure_diff data as cell attributes
+    def __pressure_diff__(self, file):
+        file.write(f"\nCELL_DATA {len(self.__CCO__.lines)}\n")
+        file.write("scalars pressure_diff float\nLOOKUP_TABLE default\n")
+
+        for line in self.__CCO__.lines:
+            file.write(f"{(line['pPerf'] - line['pTerm']):.7f}\n")
+
     # Write flow data as cell attributes
     def __flow__(self, file):
-        file.write(f"\nCELL_DATA {len(self.__CCO__.lines)}\n")
         file.write("scalars flow float\nLOOKUP_TABLE default\n")
 
         for line in self.__CCO__.lines:
@@ -60,7 +79,7 @@ class TO_VTK:
             file.write(f"{line['radius']:.7f}\n")
 
     # Write volume data as cell attributes
-    def __radius__(self, file):
+    def __volume__(self, file):
         file.write("scalars volume float\nLOOKUP_TABLE default\n")
 
         for line in self.__CCO__.lines:

@@ -25,7 +25,7 @@ class CCO:
             # Get points, lines, and calculate levels
             self.__get_points__()
             self.__get_lines__()
-            self.__calc_levels__()
+            self.__calc_levels_pressure__()
 
         except:
             raise SyntaxError("ERROR: Something is wrong with the xml structure")
@@ -66,6 +66,8 @@ class CCO:
                 "volume": None,
                 "resistance": None,
                 "flow": None,
+                "pPerf": None,
+                "pTerm": None,
                 "level": -1  # Initialize level for edge
             }
 
@@ -92,13 +94,20 @@ class CCO:
             self.lines.append(edge_data)
 
     # Calculate levels for nodes in the tree based ogitn their connections
-    def __calc_levels__(self):
+    # Calculate perfusion n terminal pressure for each line
+    def __calc_levels_pressure__(self):
         temp_lines = self.lines.copy()  # Make a copy of the lines
         levels = [[]]  # List to store levels of nodes
+        levels_pressure = [[]]  # List to store terminal pressure of lines
         
+        # Initialize the first line
         self.lines[0]["level"] = 0  # Assign level 0 to the first line
+        self.lines[0]["pPerf"] = self.pPerf  # Assign model perfusion pressure in first line
+        self.lines[0]["pTerm"] = self.lines[0]["pPerf"] - self.lines[0]["resistance"] * self.lines[0]["flow"]  # Calculate terminal pressure for the first line
+        
         temp_lines.pop(0)  # Remove the first line from temp_lines
         levels[0] = [self.lines[0]["to"]]  # Initialize level 0 with the 'to' node of the first line
+        levels_pressure[0] = [self.lines[0]["pTerm"]]  # Initialize level 0 with pTerm of the first line
         
         # Loop through remaining lines and assign levels based on connected nodes
         while temp_lines:
@@ -110,9 +119,23 @@ class CCO:
                     if from_node in level:
                         # If node is found in any level, assign next level
                         if len(levels) <= j + 1:
-                            levels.append([])  # Add a new level if needed
+                            # Add a new level if needed
+                            levels.append([])
+                            levels_pressure.append([])
                         
-                        self.lines[self.lines.index(line)]["level"] = j + 1
+                        # Get the position of the line in self.lines
+                        position_line = self.lines.index(line)  
+                        # Get the position of the from_node in the level
+                        position_pTerm = level.index(from_node)  
+
+                        # Update the current line's level and pressures
+                        self.lines[position_line]["level"] = j + 1
+                        self.lines[position_line]["pPerf"] = levels_pressure[j][position_pTerm]  # pPerf is equal to the pTerm of the last segment
+                        self.lines[position_line]["pTerm"] = self.lines[position_line]["pPerf"] - self.lines[position_line]["resistance"] * self.lines[position_line]["flow"]
+                        
+                        # Add the 'to' node and its corresponding pressure to the next level
                         levels[j + 1].append(to_node)  # Add 'to' node to the next level
+                        levels_pressure[j + 1].append(self.lines[position_line]["pTerm"])  # Add pTerm of the line to the next level
                         temp_lines.remove(line)  # Remove processed line from temp_lines
                         break
+
