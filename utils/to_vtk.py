@@ -16,7 +16,6 @@ class TO_VTK:
             file.write("# vtk DataFile Version 3.0\nvtk output\nASCII\nDATASET POLYDATA\n")
             self.__points__(file)
             self.__lines__(file)
-            self.__pressure__(file)
             self.__pressure_diff__(file)
             self.__flow__(file)
             self.__resistance__(file)
@@ -46,8 +45,8 @@ class TO_VTK:
         file.write("scalars pressure float\nLOOKUP_TABLE default\n")
 
         for line in self.__CCO__.lines:
-            file.write(f"{line['pPerf']:.7f}\n")
-            file.write(f"{line['pTerm']:.7f}\n")
+            file.write(f"{line['pPerf']:.1f}\n")
+            file.write(f"{line['pTerm']:.1f}\n")
 
     # Write pressure_diff data as cell attributes
     def __pressure_diff__(self, file):
