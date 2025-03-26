@@ -40,8 +40,6 @@ def main():
             raise ValueError(f"ERROR: The txt output file must be an .txt file. Given: '{args.txt}'")
         
         to_txt = TO_TXT(cco, args.txt)
-    else:
-        to_txt = TO_TXT(cco)
 
     # Handle .vtk output file
     if args.vtk:
@@ -49,8 +47,6 @@ def main():
             raise ValueError(f"ERROR: The vtk output file must be an .vtk file. Given: '{args.vtk}'")
         
         to_vtk = TO_VTK(cco, args.vtk)
-    else:
-        to_vtk = TO_VTK(cco)
 
     # Handle .png output file
     if args.png:
@@ -58,8 +54,6 @@ def main():
             raise ValueError(f"ERROR: The png output file must be an .png file. Given: '{args.png}'")
         
         boxplot = BoxplotGraph(cco, args.png)
-    else:
-        boxplot = BoxplotGraph(cco)
 
 if __name__ == '__main__':
     main()
