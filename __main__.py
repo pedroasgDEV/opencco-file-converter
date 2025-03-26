@@ -4,6 +4,7 @@ import os
 from models.CCO import CCO
 from utils.to_txt import TO_TXT
 from utils.to_vtk import TO_VTK
+from utils.boxplot_graph import BoxplotGraph
 
 def main():
     # Set up argument parser
@@ -18,6 +19,7 @@ def main():
     # Optional output files
     parser.add_argument("--txt", nargs="?", const="output.txt", default=None, help="Optional path to .txt output file (default: 'output.txt' if flag is used without value)")
     parser.add_argument("--vtk", nargs="?", const="output.vtk", default=None, help="Optional path to .vtk output file (default: 'output.vtk' if flag is used without value)")
+    parser.add_argument("--png", nargs="?", const="output.png", default=None, help="Optional path to the boxplot graph output .png file (default: 'output.png' if the flag is used without a value)")
 
     # Parse the provided command line arguments
     args = parser.parse_args()
@@ -49,6 +51,15 @@ def main():
         to_vtk = TO_VTK(cco, args.vtk)
     else:
         to_vtk = TO_VTK(cco)
+
+    # Handle .png output file
+    if args.vtk:
+        if not args.vtk.lower().endswith(".png"):
+            raise ValueError(f"ERROR: The png output file must be an .png file. Given: '{args.png}'")
+        
+        boxplot = BoxplotGraph(cco, args.vtk)
+    else:
+        boxplot = BoxplotGraph(cco)
 
 if __name__ == '__main__':
     main()

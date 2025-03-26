@@ -8,6 +8,7 @@ class CCO:
         self.points = []  # List to hold points data
         self.lines = []   # List to hold lines data
         self.volume = 0   # Total tree volume
+        self.radius_level = [[]] #Get the segmente radius per birfubifurcation level
 
         self.adr_xml = file_xml # Store XML file location
 
@@ -108,6 +109,7 @@ class CCO:
         temp_lines.pop(0)  # Remove the first line from temp_lines
         levels[0] = [self.lines[0]["to"]]  # Initialize level 0 with the 'to' node of the first line
         levels_pressure[0] = [self.lines[0]["pTerm"]]  # Initialize level 0 with pTerm of the first line
+        self.radius_level[0] = [self.lines[0]["radius"]] # Initialize level 0 with radius of the first line
         
         # Loop through remaining lines and assign levels based on connected nodes
         while temp_lines:
@@ -122,6 +124,7 @@ class CCO:
                             # Add a new level if needed
                             levels.append([])
                             levels_pressure.append([])
+                            self.radius_level.append([])
                         
                         # Get the position of the line in self.lines
                         position_line = self.lines.index(line)  
@@ -136,6 +139,7 @@ class CCO:
                         # Add the 'to' node and its corresponding pressure to the next level
                         levels[j + 1].append(to_node)  # Add 'to' node to the next level
                         levels_pressure[j + 1].append(self.lines[position_line]["pTerm"])  # Add pTerm of the line to the next level
+                        self.radius_level[j + 1].append(self.lines[position_line]["radius"]) # Add radius of the line to the next level
                         temp_lines.remove(line)  # Remove processed line from temp_lines
                         break
 
