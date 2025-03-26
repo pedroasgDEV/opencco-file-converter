@@ -53,11 +53,11 @@ def main():
         to_vtk = TO_VTK(cco)
 
     # Handle .png output file
-    if args.vtk:
-        if not args.vtk.lower().endswith(".png"):
+    if args.png:
+        if not args.png.lower().endswith(".png"):
             raise ValueError(f"ERROR: The png output file must be an .png file. Given: '{args.png}'")
         
-        boxplot = BoxplotGraph(cco, args.vtk)
+        boxplot = BoxplotGraph(cco, args.png)
     else:
         boxplot = BoxplotGraph(cco)
 
