@@ -5,6 +5,7 @@ build
 *.txt
 *.vtk
 *.xml
+*.png
 opencco-file-converter
 
 # Byte-compiled / optimized / DLL files
