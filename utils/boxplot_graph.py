@@ -25,6 +25,11 @@ class BoxplotGraph:
         plt.ylabel("Radius")
         plt.title("Distribution of Radius by Bifurcation Level")
         plt.grid(True, linestyle='--', alpha=0.6)
+
+        """ plt.ylim(0, 1.80)
+        plt.xlabel("Nível de Bifurcação")
+        plt.ylabel("Raio")
+        plt.title("Distribuição de Raio por Nível de Bifurcação") """ 
         
         plt.savefig(self.adr_png, dpi=300, bbox_inches='tight')
         plt.close()
