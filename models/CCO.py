@@ -39,6 +39,9 @@ class CCO:
     # Extract points (nodes)
     def __get_points__(self):
         nodes = self.__tree_dict__.get("gxl", {}).get("graph", {}).get("node", [])
+
+        if isinstance(nodes, dict):
+            nodes = [nodes]
         
         for node in nodes:
             node_id = int(node["@id"].replace("n", ""))  # Extract node ID
@@ -57,6 +60,9 @@ class CCO:
     # Extract lines (edges) from the XML tree
     def __get_lines__(self):
         edges = self.__tree_dict__.get("gxl", {}).get("graph", {}).get("edge", [])
+
+        if isinstance(edges, dict):
+            edges = [edges]
     
         for edge in edges:
             edge_data = {
