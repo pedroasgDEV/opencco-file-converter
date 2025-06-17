@@ -4,7 +4,7 @@ import os
 from models.CCO import CCO
 from utils.to_txt import TO_TXT
 from utils.to_vtk import TO_VTK
-from utils.boxplot_graph import BoxplotGraph
+from utils.to_json import TO_JSON
 
 def main():
     # Set up argument parser
@@ -19,7 +19,7 @@ def main():
     # Optional output files
     parser.add_argument("--txt", nargs="?", const="output.txt", default=None, help="Optional path to .txt output file (default: 'output.txt' if flag is used without value)")
     parser.add_argument("--vtk", nargs="?", const="output.vtk", default=None, help="Optional path to .vtk output file (default: 'output.vtk' if flag is used without value)")
-    parser.add_argument("--png", nargs="?", const="output.png", default=None, help="Optional path to the boxplot graph output .png file (default: 'output.png' if the flag is used without a value)")
+    parser.add_argument("--json", nargs="?", const="output.json", default=None, help="Optional path to .json output file (default: 'output.json' if the flag is used without a value)")
 
     # Parse the provided command line arguments
     args = parser.parse_args()
@@ -48,12 +48,12 @@ def main():
         
         to_vtk = TO_VTK(cco, args.vtk)
 
-    # Handle .png output file
-    if args.png:
-        if not args.png.lower().endswith(".png"):
-            raise ValueError(f"ERROR: The png output file must be an .png file. Given: '{args.png}'")
+    # Handle .json output file
+    if args.json:
+        if not args.json.lower().endswith(".json"):
+            raise ValueError(f"ERROR: The json output file must be an .json file. Given: '{args.json}'")
         
-        boxplot = BoxplotGraph(cco, args.png)
+        json = TO_JSON(cco, args.json)
 
 if __name__ == '__main__':
     main()

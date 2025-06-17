@@ -1,7 +1,4 @@
 xmltodict
 argparse
 pyinstaller
-matplotlib
-seaborn
-pillow
 numpy

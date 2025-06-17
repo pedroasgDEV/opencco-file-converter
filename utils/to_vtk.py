@@ -16,11 +16,10 @@ class TO_VTK:
             file.write("# vtk DataFile Version 3.0\nvtk output\nASCII\nDATASET POLYDATA\n")
             self.__points__(file)
             self.__lines__(file)
-            self.__pressure_diff__(file)
             self.__flow__(file)
             self.__resistance__(file)
             self.__radius__(file)
-            self.__volume__(file)
+            self.__length__(file)
 
     # Write point data to the VTK file
     def __points__(self, file):
@@ -39,22 +38,6 @@ class TO_VTK:
         for line in self.__CCO__.lines:
             file.write(f"2 {line['from']} {line['to']}\n")  # '2' indicates a line with two points
 
-    # Write pressure data as point attributes
-    def __pressure__(self, file):
-        file.write(f"\nPOINT_DATA {len(self.__CCO__.points)}\n")
-        file.write("scalars pressure float\nLOOKUP_TABLE default\n")
-
-        for line in self.__CCO__.lines:
-            file.write(f"{line['pPerf']:.1f}\n")
-            file.write(f"{line['pTerm']:.1f}\n")
-
-    # Write pressure_diff data as cell attributes
-    def __pressure_diff__(self, file):
-        file.write(f"\nCELL_DATA {len(self.__CCO__.lines)}\n")
-        file.write("scalars pressure_diff float\nLOOKUP_TABLE default\n")
-
-        for line in self.__CCO__.lines:
-            file.write(f"{(line['pPerf'] - line['pTerm']):.7f}\n")
 
     # Write flow data as cell attributes
     def __flow__(self, file):
@@ -65,10 +48,10 @@ class TO_VTK:
 
     # Write resistance data as cell attributes
     def __resistance__(self, file):
-        file.write("scalars resistance float\nLOOKUP_TABLE default\n")
+        file.write("scalars resistance_relative_sub float\nLOOKUP_TABLE default\n")
 
         for line in self.__CCO__.lines:
-            file.write(f"{line['resistance']:.7f}\n")
+            file.write(f"{line['resistance_relative_sub']:.7f}\n")
 
     # Write radius data as cell attributes
     def __radius__(self, file):
@@ -77,9 +60,9 @@ class TO_VTK:
         for line in self.__CCO__.lines:
             file.write(f"{line['radius']:.7f}\n")
 
-    # Write volume data as cell attributes
-    def __volume__(self, file):
-        file.write("scalars volume float\nLOOKUP_TABLE default\n")
+    # Write length data as cell attributes
+    def __length__(self, file):
+        file.write("scalars length float\nLOOKUP_TABLE default\n")
 
         for line in self.__CCO__.lines:
-            file.write(f"{line['volume']:.7f}\n")
+            file.write(f"{line['length']:.7f}\n")
