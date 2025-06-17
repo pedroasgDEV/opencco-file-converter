@@ -19,9 +19,9 @@ class CCO:
             # Extract 'pPerf' and 'pTerm' values
             for attr in self.__tree_dict__["gxl"]["graph"]["info_graph"]["attr"]:
                 if attr["@name"].strip() == "pPerf":
-                    self.pPerf = int(attr["float"])
+                    self.pPerf = int(attr["float"]) # Pa
                 if attr["@name"].strip() == "pTerm":
-                    self.pTerm = int(attr["float"])
+                    self.pTerm = int(attr["float"]) # Pa
 
             # Get points, lines, and calculate levels
             self.__get_points__()
@@ -62,35 +62,35 @@ class CCO:
             edge_data = {
                 "from": int(edge["@from"].replace("n", "")),  # Extract 'from' node
                 "to": int(edge["@to"].replace("n", "")),      # Extract 'to' node
-                "length": None,
-                "radius": None,
-                "volume": None,
-                "resistance": None,
-                "flow": None,
-                "pPerf": None,
-                "pTerm": None,
+                "length": None, # mm
+                "radius": None, # mm
+                "volume": None, # mm³
+                "resistance": None, # Pa·s/mm³
+                "flow": None, # mm³/s
+                "pPerf": None, # Pa
+                "pTerm": None, # Pa
                 "level": -1  # Initialize level for edge
             }
 
             # Extract edge attributes (flow, resistance, radius)
             for attr in edge.get("attr", []):
                 if attr["@name"].strip() == "flow":
-                    edge_data["flow"] = float(attr["float"])
-                if attr["@name"].strip() == "resistance":
-                    edge_data["resistance"] = float(attr["float"])
+                    edge_data["flow"] = float(attr["float"]) / 60.0 #  µL/min -> mm³/s 
+                if attr["@name"].strip() == "resistance": 
+                    edge_data["resistance"] = float(attr["float"]) # Pa·s/mm³
                 if attr["@name"].strip() == "radius":
-                    edge_data["radius"] = float(attr["float"])
+                    edge_data["radius"] = float(attr["float"]) # mm
             
             # Get the coordinates of each point
             pFrom = self.points[edge_data["from"]]["floats"]
             pTo = self.points[edge_data["to"]]["floats"]
 
             # Calc Length
-            edge_data["length"] = np.linalg.norm(np.array(pTo) - np.array(pFrom)) * 10
+            edge_data["length"] = np.linalg.norm(np.array(pTo) - np.array(pFrom)) * 10 # mm
 
             # Calc Volume
             edge_data["volume"] = math.pi * (edge_data["radius"] ** 2) * edge_data["length"]
-            self.volume += edge_data["volume"]
+            self.volume += edge_data["volume"] # mm³
 
             self.lines.append(edge_data)
 
