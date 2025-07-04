@@ -27,8 +27,6 @@ class CCO:
             self.__get_lines__()
             self.__calc_levels__()
 
-            self.radius_avg_level = np.mean(np.array(self.radius_level), axis=1) # Calc avg radius per level
-
         except:
             raise SyntaxError("ERROR: Something is wrong with the xml structure")
 
