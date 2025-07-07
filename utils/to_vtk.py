@@ -38,6 +38,8 @@ class TO_VTK:
         for line in self.__CCO__.lines:
             file.write(f"2 {line['from']} {line['to']}\n")  # '2' indicates a line with two points
 
+        file.write(f"\nCELL_DATA {len(self.__CCO__.lines)}\n")
+
 
     # Write flow data as cell attributes
     def __flow__(self, file):
