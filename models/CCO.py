@@ -1,5 +1,5 @@
 import xmltodict
-import math
+from math import pi as PI
 import numpy as np
 
 class CCO:
@@ -8,7 +8,7 @@ class CCO:
         self.points = []  # List to hold points data
         self.lines = []   # List to hold lines data
         self.radius_level = [[]] #Get the segmente radius per birfubifurcation level
-
+        self.total_volume = 0 #
         self.adr_xml = file_xml # Store XML file location
 
         try:
@@ -18,14 +18,17 @@ class CCO:
             # Extract 'pPerf' and 'pTerm' values
             for attr in self.__tree_dict__["gxl"]["graph"]["info_graph"]["attr"]:
                 if attr["@name"].strip() == "pPerf":
-                    self.pPerf = int(attr["float"]) # Pa
+                    self.pPerf = float(attr["float"]) # Pa
                 if attr["@name"].strip() == "pTerm":
-                    self.pTerm = int(attr["float"]) # Pa
+                    self.pTerm = float(attr["float"]) # Pa
 
-            # Get points, lines, and calculate levels
+            # Get points, lines, calculate levels, lengths, volumes
             self.__get_points__()
             self.__get_lines__()
             self.__calc_levels__()
+            self.__calc_length__()
+            self.__calc_volume__()
+
 
         except:
             raise SyntaxError("ERROR: Something is wrong with the xml structure")
@@ -87,9 +90,6 @@ class CCO:
             pFrom = self.points[edge_data["from"]]["floats"]
             pTo = self.points[edge_data["to"]]["floats"]
 
-            # Calc Length
-            edge_data["length"] = np.linalg.norm(np.array(pTo) - np.array(pFrom)) # mm
-
             self.lines.append(edge_data)
 
     # Calculate levels for nodes in the tree based ogitn their connections
@@ -129,4 +129,33 @@ class CCO:
                         self.radius_level[j + 1].append(self.lines[position_line]["radius"]) # Add radius of the line to the next level
                         temp_lines.remove(line)  # Remove processed line from temp_lines
                         break
+    
+    # Calc length for each edge
+    def __calc_length__(self):
+        
+        R_const = (8 * 0.0036) / PI # (8η)/π
 
+        for edge in self.lines:
+            
+            # Get child edges
+            childs = []
+            for child in self.lines:
+                if edge["to"] == child["from"]:
+                    childs.append(child)
+
+            # If is a terminal edge R*sub = R*
+            if not childs:
+                edge["length"] = edge["resistance_relative_sub"] / R_const # l = R*/((8η)/π)
+                continue
+            
+            # If no a terminal R* = R*sub - ((βesq)^4/R*sub esq + (βdir)^4/R*sub dir)^-1
+            calc_childs = (childs[0]["radius"]/edge["radius"])**4/childs[0]["resistance_relative_sub"] + (childs[1]["radius"]/edge["radius"])**4/childs[1]["resistance_relative_sub"]
+            R_relative = edge["resistance_relative_sub"] - calc_childs**-1
+
+            edge["length"] = R_relative / R_const # l = R*/((8η)/π)
+
+    # Calc length for each volume
+    def __calc_volume__(self):
+        for edge in self.lines:
+            edge["volume"] = PI * edge["length"] * edge["radius"]**2 # V = πlr²
+            self.total_volume += edge["volume"]
