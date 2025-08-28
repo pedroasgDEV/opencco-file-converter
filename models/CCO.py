@@ -7,7 +7,7 @@ class CCO:
         # Initialize tree structure
         self.points = []  # List to hold points data
         self.lines = []   # List to hold lines data
-        self.radius_level = [] #Get the segmente radius per birfubifurcation level
+        self.radius_level = [[]] #Get the segmente radius per birfubifurcation level
         self.avg_diameter_level = [] # Stores the diameter average of each level
         self.min_diameter_level = [] # Stores the min diameter per level
         self.max_diameter_level = [] # Stores the min diameter per level
