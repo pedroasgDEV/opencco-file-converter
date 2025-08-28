@@ -7,9 +7,13 @@ class CCO:
         # Initialize tree structure
         self.points = []  # List to hold points data
         self.lines = []   # List to hold lines data
-        self.radius_level = [[]] #Get the segmente radius per birfubifurcation level
+        self.radius_level = [] #Get the segmente radius per birfubifurcation level
+        self.avg_diameter_level = [] # Stores the diameter average of each level
+        self.min_diameter_level = [] # Stores the min diameter per level
+        self.max_diameter_level = [] # Stores the min diameter per level
         self.total_volume = 0 #
         self.adr_xml = file_xml # Store XML file location
+        self.max_level = 0
 
         try:
             # Read and parse the XML file
@@ -77,7 +81,7 @@ class CCO:
                 "level": -1  # Initialize level for edge
             }
 
-            # Extract edge attributes (flow, resistance_relative_sub, radius)
+            # Extract edge attributes (flow, resistance_relative_sub, radius, diameter)
             for attr in edge.get("attr", []):
                 if attr["@name"].strip() == "flow":
                     edge_data["flow"] = float(attr["float"]) # mm³/s 
@@ -159,3 +163,11 @@ class CCO:
         for edge in self.lines:
             edge["volume"] = PI * edge["length"] * edge["radius"]**2 # V = πlr²
             self.total_volume += edge["volume"]
+    
+    # Calc diameter averages, min and max
+    def __calc_avg_max_min__(self):
+        
+        for level in self.radius_level:
+            self.min_diameter_level.append(min(level)*2)
+            self.max_diameter_level.append(max(level)*2)
+            self.avg_diameter_level.append(sum(level)*2 / len(level))
