@@ -26,12 +26,13 @@ class CCO:
                 if attr["@name"].strip() == "pTerm":
                     self.pTerm = float(attr["float"]) # Pa
 
-            # Get points, lines, calculate levels, lengths, volumes
+            # Get points, lines, calculate levels, lengths, volumes ...
             self.__get_points__()
             self.__get_lines__()
             self.__calc_levels__()
             self.__calc_length__()
             self.__calc_volume__()
+            self.__calc_avg_max_min__()
 
 
         except:
